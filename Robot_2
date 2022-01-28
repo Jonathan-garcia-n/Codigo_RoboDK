@@ -1,0 +1,211 @@
+
+
+from robolink import *    # RoboDK API
+from robodk import *      # Robot toolbox
+RDK = Robolink()
+
+tool = RDK.Item('VentosaCodian', ITEM_TYPE_TOOL)
+frame_movil = RDK.Item('FrameMovil',ITEM_TYPE_FRAME)
+
+def TCP_On(toolitem): #Funcion para agarrar
+    """Attaches the closest object to the toolitem Htool pose,
+    It will also output appropriate function calls on the generated robot program (call to TCP_On)"""
+    toolitem.AttachClosest()
+    toolitem.RDK().RunMessage('Set air valve on')
+    toolitem.RDK().RunProgram('TCP_On()');
+        
+def TCP_Off(toolitem, itemleave=0): #Funcion para soltar
+    """Detaches the closest object attached to the toolitem Htool pose,
+    It will also output appropriate function calls on the generated robot program (call to TCP_Off)"""
+    toolitem.DetachAll(itemleave)
+    toolitem.RDK().RunMessage('Set air valve off')
+    toolitem.RDK().RunProgram('TCP_Off()');
+
+#Obtención del tipo de circuito a ensamblar
+PARAM_NUM_CIRC = 'NumeroCircuito'
+numeroCircuito = RDK.getParam(PARAM_NUM_CIRC)
+tipoCircuitoinput = mbox('Ingrese el numero del circuito a construir [1, 2]',entry=numeroCircuito)
+if tipoCircuitoinput:
+    RDK.setParam(PARAM_NUM_CIRC, tipoCircuitoinput)
+else:
+    raise Exception('Operation cancelled by user')
+numeroCircuito = int(numeroCircuito)
+
+
+###############################################################
+Robot2 = RDK.Item('Codian',ITEM_TYPE_ROBOT) #Codian D4-1600-S040L
+if not Robot2.Valid():
+    quit()
+reference2 = Robot2.Parent()
+print (reference2)
+Robot2.setPoseFrame(reference2)
+pose_ref2=Robot2.Pose()
+print (pose_ref2)
+posi2 = Pose_2_TxyzRxyz(pose_ref2)
+print (posi2)
+home_joints2 =  Robot2.JointsHome()
+print (home_joints2)
+newHome2 = [-30.000000, -26.354200, -26.354200, 0.000000]
+Robot2.MoveJ(newHome2)
+pose_ref=Robot2.Pose()
+
+limitneg,limitpos,pp = Robot2.JointLimits() 
+print (limitneg,  "\n" ,limitpos ,"\n" )
+
+#Robot2
+HomeC = [-30.000000, -26.354200, -26.354200, 0.000000]
+AproxPick = [76.111102, -7.936687, -5.465894, 0.000000]
+PickATMEGA1 = [86.242901, 18.140089, 17.523197, 0.000000]
+PickATMEGA2 = [75.301748, 10.041005, 9.474731, 0.000000]
+PickATMEGA3 = [65.069845, 4.221009, 3.679088, 0.000000]
+PickATEMGA4 = [55.120372, -0.039641, -0.569411, 0.000000]
+PickRES1 = [85.892151, 24.706958, 9.911710, 0.000000]
+PickRES2 = [75.770741, 16.656180, 2.987535, 0.000000]
+PickRES3 = [65.636236, 10.516000, -2.557491, 0.000000]
+PickRES4 = [55.318883, 5.937914, -6.822219, 0.000000]
+PickSMD1 = [86.140748, 10.892593, 25.178152, 0.000000]
+PickSMD2 = [75.484107, 3.632260, 16.770313, 0.000000]
+PickSMD3 = [65.727501, -1.675748, 10.912587, 0.000000]
+PickSMD4 = [55.780921, -5.788131, 6.500481, 0.000000]
+AproxPlace = [-19.820819, 69.401934, 66.033054, 0.000000]
+PlaceA1 = [-8.741729, 79.101084, 76.531653, 0.000000]
+PlaceA2 = [-10.888909, 70.836741, 64.978629, 0.000000]
+PlaceA3 = [-10.593131, 69.785867, 66.495496, 90.000000]
+PlaceB1 = [-9.905960, 73.376619, 69.923437, 0.000000]
+PlaceB2 = [-10.731347, 70.868000, 71.081491, 0.000000]
+PlaceB3 = [-8.165713, 82.949509, 80.784876, -90.000000]
+PlaceC_ATMEGA = [-9.710013, 72.966979, 70.525428, 0.000000]
+PlaceC_R1 = [-10.374302, 70.935092, 71.839156, 0.000000]
+PlaceC_R2 = [-8.535435, 81.182983, 81.835679, 0.000000]
+PlaceC_R3 = [-8.672275, 81.713836, 80.992438, 0.000000]
+PlaceC_SMD1 = [-7.947828, 83.153638, 81.041725, 0.000000]
+PlaceC_SMD2 = [-7.447037, 84.967210, 80.958220, 0.000000]
+PlaceC_SMD3 = [-9.255231, 76.283287, 70.807350, 0.000000]
+PlaceD_R1 = [-11.274425, 67.275213, 67.505431, 0.000000]
+PlaceD_R2 = [-10.194663, 73.369124, 73.570231, 0.000000]
+PlaceD_R3 = [-11.189197, 67.738008, 66.513098, 0.000000]
+PlaceD_R4 = [-10.042099, 74.566669, 73.517441, 0.000000]
+PlaceD_SMD1 = [-10.621780, 69.326864, 66.361105, 0.000000]
+PlaceD_SMD2 = [-10.240081, 71.113654, 65.844139, 0.000000]
+PlaceD_SMD3 = [-9.314237, 76.253226, 71.598667, 0.000000]
+PlaceD_SMD4 = [-9.487274, 75.039660, 72.450628, 0.000000]
+PlaceE_ATMEGA = [-7.321846, 86.088964, 84.235102, 0.000000]
+PlaceE_R1 = [-11.374257, 67.147539, 68.061852, 0.000000]
+PlaceE_R2 = [-11.289192, 67.917839, 66.878677, 0.000000]
+PlaceE_R3 = [-11.184925, 69.032755, 65.976153, 0.000000]
+PlaceE_SMD1 = [-9.615591, 73.863180, 74.565571, 0.000000]
+PlaceE_SMD2 = [-9.483490, 74.965809, 74.015795, 0.000000]
+PlaceE_SMD3 = [-9.414157, 75.388710, 72.743316, 0.000000]
+#===================================================================
+Robot2.MoveJ(AproxPick)
+
+item1 = RDK.Item('ATMEGA1')
+item2 = RDK.Item('ATMEGA2')
+item3 = RDK.Item('ATMEGA3')
+item4 = RDK.Item('ATMEGA4')
+item5 = RDK.Item('ATMEGA5')
+item6 = RDK.Item('RES1')
+item7 = RDK.Item('RES2')
+item8 = RDK.Item('RES3')
+item9 = RDK.Item('RES4')
+item10 = RDK.Item('RES5')
+item11 = RDK.Item('RES5_SMD_1')
+item12 = RDK.Item('RES5_SMD_2')
+frame6 = RDK.Item('Frame 6')
+frame7 = RDK.Item('Frame 7')
+
+if (numeroCircuito == 1):
+    #Circuito1#
+    Robot2.MoveJ(HomeC)
+    Robot2.MoveJ(AproxPick)
+    Robot2.MoveJ(PickATMEGA2)
+    TCP_On(tool)
+    Robot2.MoveJ(AproxPick)
+    Robot2.MoveJ(HomeC)
+    Robot2.MoveJ(AproxPlace)
+    Robot2.MoveJ(PlaceA1)
+    TCP_Off(tool,frame_movil)
+    Robot2.MoveJ(AproxPlace)
+    Robot2.MoveJ(HomeC)
+    Robot2.MoveJ(AproxPick)
+    Robot2.MoveJ(PickRES1)
+    TCP_On(tool)
+    Robot2.MoveJ(AproxPick)
+    Robot2.MoveJ(HomeC)
+    Robot2.MoveJ(AproxPlace)
+    Robot2.MoveJ(PlaceA2)
+    TCP_Off(tool,frame_movil)
+    Robot2.MoveJ(AproxPlace)
+    Robot2.MoveJ(HomeC)
+    Robot2.MoveJ(AproxPick)
+    Robot2.MoveJ(PickSMD1)
+    TCP_On(tool)
+    Robot2.MoveJ(AproxPick)
+    Robot2.MoveJ(HomeC)
+    Robot2.MoveJ(AproxPlace)
+    Robot2.MoveJ(PlaceA3)
+    TCP_Off(tool,frame_movil)
+    Robot2.MoveJ(AproxPlace)
+    Robot2.MoveJ(HomeC)
+
+#soldar
+    item1.Copy('item3')                #copia el item
+    item1_Copy = frame7.Paste() #pega el item en la referencia, en este caso sobre la original
+    item2.Copy('item9')
+    item2_Copy = frame7.Paste()
+    item3.Copy('item14')
+    item3_Copy = frame7.Paste()
+    
+    circuito1 = RDK.MergeItems(list_items = [item1_Copy,item2_Copy,item3_Copy]) #Pone en un arreglo todos los objetos que quiere hacer un solo objeto (los de toda la lista). #luego de soldar
+    circuito1.setVisible(False)       #quita la visibilidad para cambiaar de posiscion
+    poscircuito1 = circuito1.Pose()   #adquiere la posisicion original
+    circuito1.setPose(poscircuito1*transl(0,0,0))   #desplazamiento, en este caso 0 en y
+    circuito1.setName("circuito1_copy")#le coloca el nombre al objeto en la nuva posicio
+    circuito1.setVisible(True)   #hace visible el objeto ya junto en la nueva posicion
+
+elif (numeroCircuito == 2):
+    Robot2.MoveJ(HomeC)
+    Robot2.MoveJ(AproxPick)
+    Robot2.MoveJ(PickATMEGA2)
+    TCP_On(tool)
+    Robot2.MoveJ(AproxPick)
+    Robot2.MoveJ(HomeC)
+    Robot2.MoveJ(AproxPlace)
+    Robot2.MoveJ(PlaceB1)
+    TCP_Off(tool,frame_movil)
+    Robot2.MoveJ(AproxPlace)
+    Robot2.MoveJ(HomeC)
+    Robot2.MoveJ(AproxPick)
+    Robot2.MoveJ(PickRES1)
+    TCP_On(tool)
+    Robot2.MoveJ(AproxPick)
+    Robot2.MoveJ(HomeC)
+    Robot2.MoveJ(AproxPlace)
+    Robot2.MoveJ(PlaceB2)
+    TCP_Off(tool,frame_movil)
+    Robot2.MoveJ(AproxPlace)
+    Robot2.MoveJ(HomeC)
+    Robot2.MoveJ(AproxPick)
+    Robot2.MoveJ(PickSMD1)
+    TCP_On(tool)
+    Robot2.MoveJ(AproxPick)
+    Robot2.MoveJ(HomeC)
+    Robot2.MoveJ(AproxPlace)
+    Robot2.MoveJ(PlaceB3)
+    TCP_Off(tool,frame_movil)
+    Robot2.MoveJ(AproxPlace)
+    Robot2.MoveJ(HomeC)
+
+    item1.Copy('item2')                #copia el item
+    item1_Copy = frame7.Paste() #pega el item en la referencia, en este caso sobre la original
+    item2.Copy('item6')
+    item2_Copy = frame7.Paste()
+    item3.Copy('item11')
+    item3_Copy = frame7.Paste()
+    
+    circuito2 = RDK.MergeItems(list_items = [item1_Copy,item2_Copy,item3_Copy]) #Pone en un arreglo todos los objetos que quiere hacer un solo objeto (los de toda la lista). #luego de soldar
+    circuito2.setVisible(False)       #quita la visibilidad para cambiaar de posiscion
+    poscircuito2 = circuito2.Pose()   #adquiere la posisicion original
+    circuito2.setPose(poscircuito2*transl(0,0,0))   #desplazamiento, en este caso 100 en y
+    circuito2.setName("circuito2_copy")#le coloca el nombre al objeto en la nuva posicio
+    circuito2.setVisible(True)   #hace visible el objeto ya junto en la nueva posicion
