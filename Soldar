@@ -1,0 +1,140 @@
+from robolink import *    # RoboDK API
+from robodk import *      # Robot toolbox
+from time import*
+RDK = Robolink()
+
+
+# Program example:              #se optiene los 3 objetos, box, cilx frame 3
+item1 = RDK.Item('ATMEGA1')
+item2 = RDK.Item('ATMEGA2')
+item3 = RDK.Item('ATMEGA3')
+item4 = RDK.Item('ATMEGA4')
+item5 = RDK.Item('ATMEGA5')
+item6 = RDK.Item('RES1')
+item7 = RDK.Item('RES2')
+item8 = RDK.Item('RES3')
+item9 = RDK.Item('RES4')
+item10 = RDK.Item('RES5')
+item11 = RDK.Item('RES5_SMD_1')
+item12 = RDK.Item('RES5_SMD_2')
+item13 = RDK.Item('RES5_SMD_3')
+item14 = RDK.Item('RES5_SMD_4')
+item15 = RDK.Item('RES5_SMD_5')
+frame6 = RDK.Item('Frame 6')
+
+
+
+if item1.Valid():
+    print('Item selected: ' + item1.Name())
+    print('Item posistion: ' + repr(item1.Pose()))
+    print('Item selected: ' + item2.Name())
+    print('Item posistion: ' + repr(item2.Pose()))
+
+
+print('Items in the station:')
+itemlist = RDK.ItemList()       #enlista en un arreglo todos los elemntos que se encuentran en la estacion o en el arbol
+for i in itemlist:  #un for de todo los guaradado y saca el nombre de los items
+ print(i.Name())    #saca solo el nombre de los item
+
+if (numeroCircuito == 1):
+    item1.Copy('item2')                #copia el item
+    item1_Copy = frame6.Paste() #pega el item en la referencia, en este caso sobre la original
+    item2.Copy('item6')
+    item2_Copy = frame6.Paste()
+    item3.Copy('item11')
+    item3_Copy = frame6.Paste()
+    sleep(2)
+    circuito1 = RDK.MergeItems(list_items = [item1_Copy,item2_Copy,item3_Copy]) #Pone en un arreglo todos los objetos que quiere hacer un solo objeto (los de toda la lista). #luego de soldar
+    circuito1.setVisible(False)       #quita la visibilidad para cambiaar de posiscion
+    poscircuito1 = circuito1.Pose()   #adquiere la posisicion original
+    circuito1.setPose(poscircuito1*transl(0,0,0))   #desplazamiento, en este caso 0 en y
+    circuito1.setName("circuito1_copy")#le coloca el nombre al objeto en la nuva posicio
+    circuito1.setVisible(True)   #hace visible el objeto ya junto en la nueva posicion
+
+elif (numeroCircuito == 2):
+    item1.Copy('item2')                #copia el item
+    item1_Copy = frame6.Paste() #pega el item en la referencia, en este caso sobre la original
+    item2.Copy('item6')
+    item2_Copy = frame6.Paste()
+    item3.Copy('item11')
+    item3_Copy = frame6.Paste()
+    sleep(2)
+    circuito2 = RDK.MergeItems(list_items = [item1_Copy,item2_Copy,item3_Copy]) #Pone en un arreglo todos los objetos que quiere hacer un solo objeto (los de toda la lista). #luego de soldar
+    circuito2.setVisible(False)       #quita la visibilidad para cambiaar de posiscion
+    poscircuito2 = circuito2.Pose()   #adquiere la posisicion original
+    circuito2.setPose(poscircuito2*transl(0,0,0))   #desplazamiento, en este caso 100 en y
+    circuito2.setName("circuito2_copy")#le coloca el nombre al objeto en la nuva posicio
+    circuito2.setVisible(True)   #hace visible el objeto ya junto en la nueva posicion
+
+elif (numeroCircuito == 3):
+    item1.Copy('item2')                #copia el item
+    item1_Copy = frame6.Paste() #pega el item en la referencia, en este caso sobre la original
+    item2.Copy('item6')
+    item2_Copy = frame6.Paste()
+    item3.Copy('item7')
+    item3_Copy = frame6.Paste()
+    item4.Copy('item8')
+    item4_Copy = frame6.Paste()
+    item5.Copy('item11')
+    item5_Copy = frame6.Paste()
+    item6.Copy('item12')
+    item6_Copy = frame6.Paste()
+    item7.Copy('item13')
+    item7_Copy = frame6.Paste()
+    sleep(2)
+    circuito1 = RDK.MergeItems(list_items = [item1_Copy,item2_Copy,item3_Copy,item4_Copy,item5_Copy,item6_Copy,item7_Copy]) #Pone en un arreglo todos los objetos que quiere hacer un solo objeto (los de toda la lista). #luego de soldar
+    circuito1.setVisible(False)       #quita la visibilidad para cambiaar de posiscion
+    poscircuito1 = circuito1.Pose()   #adquiere la posisicion original
+    circuito1.setPose(poscircuito1*transl(0,0,0))   #desplazamiento, en este caso 100 en y
+    circuito1.setName("circuito1_copy")#le coloca el nombre al objeto en la nuva posicio
+    circuito1.setVisible(True)   #hace visible el objeto ya junto en la nueva posicion
+
+elif (numeroCircuito == 4):
+    item1.Copy('item6')
+    item1_Copy = frame6.Paste()
+    item2.Copy('item7')
+    item2_Copy = frame6.Paste()
+    item3.Copy('item8')
+    item3_Copy = frame6.Paste()
+    item4.Copy('item9')
+    item4_Copy = frame6.Paste()
+    item5.Copy('item11')
+    item5_Copy = frame6.Paste()
+    item6.Copy('item12')
+    item6_Copy = frame6.Paste()
+    item7.Copy('item13')
+    item7_Copy = frame6.Paste()
+    item8.Copy('item14')
+    item8_Copy = frame6.Paste()
+    sleep(2)
+    circuito1 = RDK.MergeItems(list_items = [item1_Copy,item2_Copy,item3_Copy,item4_Copy,item5_Copy,item6_Copy,item7_Copy,item8_Copy]) #Pone en un arreglo todos los objetos que quiere hacer un solo objeto (los de toda la lista). #luego de soldar
+    circuito1.setVisible(False)       #quita la visibilidad para cambiaar de posiscion
+    poscircuito1 = circuito1.Pose()   #adquiere la posisicion original
+    circuito1.setPose(poscircuito1*transl(0,0,0))   #desplazamiento, en este caso 100 en y
+    circuito1.setName("circuito1_copy")#le coloca el nombre al objeto en la nuva posicio
+    circuito1.setVisible(True)   #hace visible el objeto ya junto en la nueva posicion
+
+
+
+elif (numeroCircuito == 5):
+    item1.Copy('item2')
+    item1_Copy = frame6.Paste()
+    item2.Copy('item6')
+    item2_Copy = frame6.Paste()
+    item3.Copy('item7')
+    item3_Copy = frame6.Paste()
+    item4.Copy('item8')
+    item4_Copy = frame6.Paste()
+    item5.Copy('item11')
+    item5_Copy = frame6.Paste()
+    item6.Copy('item12')
+    item6_Copy = frame6.Paste()
+    item7.Copy('item13')
+    item7_Copy = frame6.Paste()
+    sleep(2)
+    circuito1 = RDK.MergeItems(list_items = [item1_Copy,item2_Copy,item3_Copy,item4_Copy,item5_Copy,item6_Copy,item7_Copy]) #Pone en un arreglo todos los objetos que quiere hacer un solo objeto (los de toda la lista). #luego de soldar
+    circuito1.setVisible(False)       #quita la visibilidad para cambiaar de posiscion
+    poscircuito1 = circuito1.Pose()   #adquiere la posisicion original
+    circuito1.setPose(poscircuito1*transl(0,0,0))   #desplazamiento, en este caso 100 en y
+    circuito1.setName("circuito1_copy")#le coloca el nombre al objeto en la nuva posicio
+    circuito1.setVisible(True)   #hace visible el objeto ya junto en la nueva posicion
