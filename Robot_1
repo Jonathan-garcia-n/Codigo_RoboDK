@@ -1,0 +1,89 @@
+
+from robolink import *    # RoboDK API
+from robodk import *      # Robot toolbox
+RDK = Robolink()
+
+tool = RDK.Item('VentosaKuka1', ITEM_TYPE_TOOL)
+frame_movil = RDK.Item('FrameMovil',ITEM_TYPE_FRAME)
+
+def TCP_On(toolitem): #Funcion para agarrar
+    """Attaches the closest object to the toolitem Htool pose,
+    It will also output appropriate function calls on the generated robot program (call to TCP_On)"""
+    toolitem.AttachClosest()
+    toolitem.RDK().RunMessage('Set air valve on')
+    toolitem.RDK().RunProgram('TCP_On()');
+        
+def TCP_Off(toolitem, itemleave=0): #Funcion para soltar
+    """Detaches the closest object attached to the toolitem Htool pose,
+    It will also output appropriate function calls on the generated robot program (call to TCP_Off)"""
+    toolitem.DetachAll(itemleave)
+    toolitem.RDK().RunMessage('Set air valve off')
+    toolitem.RDK().RunProgram('TCP_Off()');
+
+"""#Obtención del tipo de circuito a ensamblar
+PARAM_NUM_CIRC = 'NumeroCircuito'
+numeroCircuito = RDK.getParam(PARAM_NUM_CIRC)
+tipoCircuitoinput = mbox('Ingrese el numero del circuito a construir [1, 2, 3, 4, 5]',entry=numeroCircuito)
+if tipoCircuitoinput:
+    RDK.setParam(PARAM_NUM_CIRC, tipoCircuitoinput)
+else:
+    raise Exception('Operation cancelled by user')
+numeroCircuito = int(numeroCircuito)"""
+
+
+####Declaración de los robots y su posición de HOME
+Robot1 = RDK.Item('Kuka1',ITEM_TYPE_ROBOT) #KUKA KR 10 R1100 sixx
+if not Robot1.Valid():
+    quit()
+reference1 = Robot1.Parent()
+print (reference1)
+Robot1.setPoseFrame(reference1)
+pose_ref1=Robot1.Pose()
+print (pose_ref1)
+posi1 = Pose_2_TxyzRxyz(pose_ref1)
+print (posi1)
+home_joints1 =  Robot1.JointsHome()
+print (home_joints1)
+newHome1 = [27.610000, -115.400000, -78.670000, -180.000000, 75.920000, -183.940000]
+Robot1.MoveJ(newHome1)
+pose_ref1=Robot1.Pose()
+
+limitneg,limitpos,pp = Robot1.JointLimits()
+print (limitneg,  "\n" ,limitpos ,"\n" )
+
+##Ingreso de targets
+#Robot1
+HomeA=[27.610000, -115.400000, -78.670000, -180.000000, 75.920000, -183.940000]
+AproxA1=[-3.117456, -136.353638, -45.043236, -180.000000, 88.603126, -183.117456]
+PickA1 = [0.165270, -146.094948, -53.724955, -180.000000, 70.180097, -179.834730]
+mov1 = [-10.170000, -90.260000, -110.260000, -180.000000, 69.470000, -189.420000]
+mov2 = [69.260000, -90.260000, -110.250000, -180.000000, 69.470000, -189.410000]
+mov3 = [162.250000, -90.260000, -110.250000, -180.000000, 69.470000, -189.410000]
+AproxB1 = [156.913370, -141.857895, -34.134669, -179.998135, 93.987522, -194.746500]
+PlaceA1 = [158.553202, -151.850952, -53.289751, -180.000000, 64.859296, 68.553202]
+
+
+#Robot3
+"""HomeK2 = [9.880666, -71.544959, 95.872669, -0.000000, 65.672290, 4.880666]
+PickPCB = [15.873908, -34.142470, 71.793807, -0.000000, 52.348663, 10.873908]
+PlacePCBFinal = [3.664096, -146.651377, -53.225589, -180.000000, 70.123034, 178.664096]"""
+
+#print(numeroCircuito)
+
+#Circuito1#
+Robot1.MoveJ(HomeA)
+Robot1.MoveJ(AproxA1)
+Robot1.MoveL(PickA1)
+TCP_On(tool)
+Robot1.MoveL(AproxA1)
+Robot1.MoveJ(mov1)
+Robot1.MoveJ(mov2)
+Robot1.MoveJ(mov3)
+Robot1.MoveJ(AproxB1)
+Robot1.MoveL(PlaceA1)
+TCP_Off(tool,frame_movil)
+Robot1.MoveJ(mov3)
+Robot1.MoveJ(mov2)
+Robot1.MoveJ(mov1)
+Robot1.MoveJ(HomeA)
+
